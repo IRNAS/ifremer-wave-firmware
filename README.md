@@ -15,7 +15,7 @@ Adjust settings be defining parameters in the WaveAnalyser constructor:
 * initial_calibration_delay - initial delay for calibration in micro-seconds
 * n_w - number of waves to measure 
 
-When n_w waves are detected average wave-height, significant wave-height and average period will be printed. 
+When n_w waves are detected average wave-height, significant wave-height and average period will be printed. Rotated Z-axis acceleration and final data is stored to SD card.  
 
 Files:
 
@@ -23,6 +23,10 @@ Files:
 
 [wave-analyser.h](https://github.com/IRNAS/ifremer-wave-firmware/blob/master/wave_analyser.h) and [wave-analyser.cpp](https://github.com/IRNAS/ifremer-wave-firmware/blob/master/wave_analyser.cpp) - main wave analyser library.
 
-[MPU9250.h](https://github.com/IRNAS/ifremer-wave-firmware/blob/master/MPU9250.h)
-[MPU9250.cpp](https://github.com/IRNAS/ifremer-wave-firmware/blob/master/MPU9250.cpp)
+[MPU9250.h](https://github.com/IRNAS/ifremer-wave-firmware/blob/master/MPU9250.h),
+[MPU9250.cpp](https://github.com/IRNAS/ifremer-wave-firmware/blob/master/MPU9250.cpp),
 [MPU9250RegisterMap.h](https://github.com/IRNAS/ifremer-wave-firmware/blob/master/MPU9250RegisterMap.h) - MPU9250 sensor library rewriten from kriswiner [MPU9250 library](https://github.com/kriswiner/MPU9250).
+
+[array_structures.h](https://github.com/IRNAS/ifremer-wave-firmware/blob/master/array_structures.h) - header for defining calculation data arrays and Quaternions.
+
+[debug_print.h](https://github.com/IRNAS/ifremer-wave-firmware/blob/master/debug_print.h) and [debug_print.cpp](https://github.com/IRNAS/ifremer-wave-firmware/blob/master/debug_print.cpp) - library for debug print. Specify printut level by seting #define DEBUG 1 to 1-5.
