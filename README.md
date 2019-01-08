@@ -5,7 +5,7 @@ Firmware for wave tracking - measures wave height and period. Communicate signif
 Firmware can be used on the STM32 board - with LoraWan communication support and on the ESP32 board with the SD card logging support. 
 
 # STM32
-For usage with STM32 and LoraWan communication you will need to run ifremer_wave_lorawan.ino as the main file, while sensors.ino and comms.ino files are needed as well. Needed libraries:
+For usage with STM32 and LoraWan communication you will need to run [ifremer_wave_lorawan.ino](https://github.com/IRNAS/ifremer-wave-firmware/blob/master/ifremer_wave_lorawan.ino) as the main file, while sensors.ino and comms.ino files are needed as well. Needed libraries:
 
 [wave-analyser.h](https://github.com/IRNAS/ifremer-wave-firmware/blob/master/wave_analyser.h) and [wave-analyser.cpp](https://github.com/IRNAS/ifremer-wave-firmware/blob/master/wave_analyser.cpp) - main wave analyser library.
 
@@ -17,8 +17,7 @@ For usage with STM32 and LoraWan communication you will need to run ifremer_wave
 
 [debug_print.h](https://github.com/IRNAS/ifremer-wave-firmware/blob/master/debug_print.h) and [debug_print.cpp](https://github.com/IRNAS/ifremer-wave-firmware/blob/master/debug_print.cpp) - library for debug print. Specify printut level by seting #define DEBUG 1 to 1-5.
 
-filters.h, filters.cpp and filters_defs.h - class with low pass filter, used for acceleration data filtering. 
-
+[filters](https://github.com/MartinBloedorn/libFilter/tree/25a03b6cb83cfef17b9eee85eb34e807bd0ad135) - class with low pass filter, used for acceleration data filtering. 
 
 The WaveAnalyser class is defined inside sensors.ino. Adjust settings be defining parameters in the WaveAnalyser constructor:
 * **cutoff_freq** - cutoff frequency for the low pass filter
