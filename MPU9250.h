@@ -75,6 +75,8 @@ public:
 	float getDt(); //Get Z rotated acceleration
 	void setDataDelay(int); //Re-set value of data delay
 
+	void MPU9250sleep(); //Go to sleep
+
 
 
 private:

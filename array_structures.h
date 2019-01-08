@@ -1,9 +1,15 @@
+/* ARRAY STRUCTURES classes - includes description of three array classes:
+* MOTION ARRAY - used to store acceleration data and analyse it, used in the wave_analyser.h library
+* QUATERNION - used for quarternion manipulation in the MPU9250.h library
+* VECTOR FLOAT - used in quaternion class
+*/
+
 #ifndef _ARRAY_STRUCTURES_H_
 #define _ARRAY_STRUCTURES_H_
 
 #include <math.h>
-#include "filters.h"
-#include "debug_print.h"
+#include "filters.h" //Library including low pass filter
+#include "debug_print.h" //Additional library for debug logging
 
 #define GRAV_CONSTANT 9.80665
 
@@ -103,20 +109,27 @@ public:
 	}
 #pragma endregion
 
+#pragma region void FilterData()
+	/* Low pass filter on data
+	Input: /
+	Output: /
+	Description: 
+	* Calculate average period
+	* Apply filter. 
+	*/
 	void FilterData() {
 
 		pos = 0;
 		dt /= N; //Calculate average period
 		LOG(1, "DT: %.6f", dt);
 		//Adjust filter sampling time?
-
 		for (int i = 0; i < N; i++) {
 			int16_t tmp = x[i];
 			x[i] = (int16_t) filter->filterIn((float) x[i]);
 			LOG(2, ", %.6f, %d, %d", dt, tmp, x[i]);
 		}
 	}
-
+#pragma endregion
 
 #pragma region float CalculateDisplacement(int end)
 	/* Calculate displacement
@@ -140,13 +153,6 @@ public:
 			v += dt * (((float)x[i] - offset) * GRAV_CONSTANT / 1000.0f); //Update velocity
 			d += dt * v; //Update displacement
 			d_last += dt * v;
-			/*Serial.print(x[i]);
-			Serial.print(" ");
-			Serial.print(v);
-			Serial.print(" ");
-			Serial.print(d);
-			Serial.print(" ");
-			Serial.println(d_last); */
 		}
 		half_period = dt * (float)(end - start); //Update half period
 
@@ -154,16 +160,17 @@ public:
 	}
 #pragma endregion 
 
-
 #pragma region float getHalfPeriod()
 	float getHalfPeriod() {
 		return(half_period);
 	}
 #pragma endregion
 
+#pragma region int16_t getElement(int i)
 	int16_t getElement(int i) {
 		return x[i];
 	}
+#pragma endregion
 
 #pragma region int GetGradient()
 	/* Get gradient for current calculation point
@@ -194,9 +201,7 @@ public:
 	}
 #pragma endregion
 
-
 };
-
 
 class Quaternion {
 public:

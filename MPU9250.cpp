@@ -227,6 +227,17 @@ float MPU9250::getDt() {
 	return(sum_send);
 }
 
+void MPU9250::MPU9250sleep() {
+
+	writeByte(MPU9250_ADDRESS, PWR_MGMT_1, 0x3f); // Set sleep mode bit (6), disable all sensors
+	delay(100);
+	writeByte(MPU9250_ADDRESS, PWR_MGMT_1, 0x48); // Set sleep mode bit (6), disable all sensors
+	delay(100); // Wait for all registers to reset
+	writeByte(AK8963_ADDRESS, AK8963_CNTL, 0x00);
+	delay(100);
+	//Serial1.print("Sleep!");
+}
+
 /* PRIVATE METHODS */
 
 #pragma region bool MPU9250::available()
