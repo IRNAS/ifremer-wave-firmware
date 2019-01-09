@@ -1,22 +1,21 @@
-/* Arduino based firmware for microclimate.network device
+/* Arduino based firmware for ifremer wave analysis system
  *
  *  Built for EU868, modify code for other bands if hardware is available
  *    
  *  Currently implemented:
  *  Reading sensors
- *  Sending data periodically
- *  Sleep mode (about 500uA)
+ *  Sending data periodically via LoraWAN
+ *  Sleep mode (about 10uA)
  *  
  *  TODO:
  *  Properly implement sensors for low-power operation, currently about 6uA
  *  Note HW modifications are required for power optimization.
  *  Cover corner-case of Join failures etc...
  *  
- *    
- *  This device has the following active I2C devices
- *  0x19  ! LIS2DH12
- *  0x40  ! HDC2080
- *  0x77  ! DPS310
+ *  INSTRUCTIONS:
+ *  Install: https://github.com/MartinBloedorn/libFilter/tree/25a03b6cb83cfef17b9eee85eb34e807bd0ad135
+ *  Edit Comms tab to enter LoraWAN details
+ *  Upload
  *  
  * Copyright (C) 2018 Musti - Institute IRNAS - contact@irnas.eu
  *
@@ -38,13 +37,14 @@
 #include "TimerMillis.h"
 #include <Wire.h>
 
+#define sleep_period 1 // sleep duration in minutes
+
 TimerMillis wdtTimer; //timer for transmission events
 
 #define debug
 #define serial_debug  Serial1
 
-boolean comms_transmit_flag = false;
-
+// watchdog timer ISR
 void ISR_WDT() {
     STM32L0.wdtReset();
 }
@@ -55,30 +55,33 @@ void setup( void )
     #ifdef debug
       serial_debug.begin(115200);
     #endif
-    //comms_setup();
-    sensors_setup();
-    wave_setup();
+
+    //Functions setup
+    comms_setup(); // LoraWAN communication
+    sensors_setup(); // Sensor communication
+
+    // Watchdog setup with kick every 15s and 18s timeout
     wdtTimer.start(ISR_WDT, 0, 15*1000);
     STM32L0.wdtEnable(18000);
 }
 void loop( void )
 {
-  STM32L0.wdtReset();
+  // setup the wave measurement code
+  wave_setup();
+  
+  // block while the wave function performs and call it periodically
+  while(update_wave()==false);
+    
+  // send the measurements and acquire all other sensor data
+  comms_transmit();
 
-  if(update_wave()){
-    Serial1.println("Got data");
-    //if (comms_transmit_flag){
-      ////TODO: requires better handling, stay in sleep with 1s cycle until beign able to send
-      comms_transmit_flag = false;
-      comms_transmit();
-    //} 
-    //flush data before sleep, otherwise not sent correctly
-    #ifdef debug
-      serial_debug.flush();
-    #endif
+  //flush data before sleep, otherwise not sent correctly
+  #ifdef debug
+    serial_debug.println("Sleep");
+    delay(100);
+    serial_debug.flush();
+  #endif
 
-    Serial1.println("sleep");
-    STM32L0.stop(5000); // Enter STOP mode and wait for an interrupt
-    wave_setup();
-  }
+  // sleep for a defined time
+  STM32L0.stop(sleep_period*60*1000); // Enter STOP mode and wait for an interrupt
 }
