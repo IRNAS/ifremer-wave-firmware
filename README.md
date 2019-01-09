@@ -4,6 +4,9 @@ Firmware for wave tracking and loraWan communication using STM32L0 board.
 Firmware for wave tracking - measures wave height and period of ordinary gravity waves with the average period between 2 and 15 seconds. Significant wave height and average period are communicated using LoraWan. 
 Firmware can be used on the STM32L0 board - with the LoraWan communication support and also on the ESP32 board with the SD card logging support. 
 
+<img src="https://github.com/IRNAS/ifremer-wave-firmware/blob/master/ESP32_setup.jpg" title="ESP32 and MPU9250 sensor setup." width="600" />
+ESP32 and MPU9250 sensor setup.
+
 # STM32L0
 For usage with STM32 and LoraWan communication you will need to run [ifremer_wave_lorawan.ino](https://github.com/IRNAS/ifremer-wave-firmware/blob/master/ifremer_wave_lorawan.ino) as the main file, while [sensors.ino](https://github.com/IRNAS/ifremer-wave-firmware/blob/master/sensors.ino) and [comms.ino](https://github.com/IRNAS/ifremer-wave-firmware/blob/master/comms.ino) files are needed as well. Add libraries:
 
