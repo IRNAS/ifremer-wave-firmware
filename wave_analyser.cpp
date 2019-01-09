@@ -62,7 +62,7 @@ void WaveAnalyser::setup() {
 	mpu.setup(); //Setup MPU sensor
 	init(); //Initialize analyser
 	
-	//Initialise arrays
+	//Initialize arrays
 	for (int i = 0; i < 2 * N_WAVES_MAX; i++) {
 		max_idx[i] = 0;
 		height[i] = 0.0;
@@ -112,9 +112,13 @@ bool WaveAnalyser::update() {
 			//LOG(1, "%d, %d, %d, %d, %d, %d", mpu.getDt(), mpu.getZacc(), A_raw->GetTimeInterval(), A_raw->UpdateAverage(), A->GetTimeInterval(), grad);
 		
 			if (full) {
-				mpu.MPU9250sleep();
+				//mpu.MPU9250sleep();
 				LOG(1, "MPU9250 to sleep.");
-				return analyseData();
+				bool done = analyseData();
+				if (done) {
+					mpu.MPU9250sleep();
+				}
+				return done;
 			}
 		}
 		//Display waiting time in seconds
