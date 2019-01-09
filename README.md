@@ -1,11 +1,11 @@
 # ifremer-wave-firmware
-Firmware for wave tracking and loraWan communication using STM32 board. 
+Firmware for wave tracking and loraWan communication using STM32L0 board. 
 
-Firmware for wave tracking - measures wave height and period. Communicate significant wave height and average period using LoraWan. 
-Firmware can be used on the STM32 board - with LoraWan communication support and on the ESP32 board with the SD card logging support. 
+Firmware for wave tracking - measures wave height and period of ordinary gravity waves with the average period between 2 and 15 seconds. Significant wave height and average period are communicated using LoraWan. 
+Firmware can be used on the STM32L0 board - with the LoraWan communication support and also on the ESP32 board with the SD card logging support. 
 
-# STM32
-For usage with STM32 and LoraWan communication you will need to run [ifremer_wave_lorawan.ino](https://github.com/IRNAS/ifremer-wave-firmware/blob/master/ifremer_wave_lorawan.ino) as the main file, while [sensors.ino](https://github.com/IRNAS/ifremer-wave-firmware/blob/master/sensors.ino) and [comms.ino](https://github.com/IRNAS/ifremer-wave-firmware/blob/master/comms.ino) files are needed as well. Needed libraries:
+# STM32L0
+For usage with STM32 and LoraWan communication you will need to run [ifremer_wave_lorawan.ino](https://github.com/IRNAS/ifremer-wave-firmware/blob/master/ifremer_wave_lorawan.ino) as the main file, while [sensors.ino](https://github.com/IRNAS/ifremer-wave-firmware/blob/master/sensors.ino) and [comms.ino](https://github.com/IRNAS/ifremer-wave-firmware/blob/master/comms.ino) files are needed as well. Add libraries:
 
 [wave-analyser.h](https://github.com/IRNAS/ifremer-wave-firmware/blob/master/wave_analyser.h) and [wave-analyser.cpp](https://github.com/IRNAS/ifremer-wave-firmware/blob/master/wave_analyser.cpp) - main wave analyser library.
 
@@ -19,9 +19,9 @@ For usage with STM32 and LoraWan communication you will need to run [ifremer_wav
 
 [filters](https://github.com/MartinBloedorn/libFilter/tree/25a03b6cb83cfef17b9eee85eb34e807bd0ad135) - class with low pass filter, used for acceleration data filtering. 
 
-HDC2080.h and HDC2080.cpp
+[HDC2080.h](https://github.com/IRNAS/ifremer-wave-firmware/blob/master/HDC2080.h) and [HDC2080.cpp](https://github.com/IRNAS/ifremer-wave-firmware/blob/master/HDC2080.cpp)
 
-LIS2DH12.h and LIS2DH12.cpp
+[LIS2DH12.h](https://github.com/IRNAS/ifremer-wave-firmware/blob/master/LIS2DH12.h) and [LIS2DH12.cpp](https://github.com/IRNAS/ifremer-wave-firmware/blob/master/LIS2DH12.cpp)
 
 The WaveAnalyser class is defined inside sensors.ino. Adjust settings be defining parameters in the WaveAnalyser constructor:
 * **cutoff_freq** - cutoff frequency for the low pass filter
@@ -39,7 +39,7 @@ Or you can use the default constructor:
 ```
 WaveAnalyser waveAnalyser,
 ```
-the pre set parameters are defined in the wave_analyser.h file. You can change the initial_calibration_delay and n_w later during the setup using 
+the pre-set parameters are defined in the wave_analyser.h file. You can change the **initial_calibration_delay** and **n_w** later during the setup using 
 ```
 waveAnalyser.setCalibrationDelay(1000); //Set new innitial calibration delay time in millis
 waveAnalyser.setNumberOfWaves(5);
@@ -57,10 +57,10 @@ Each loop ```update_wave()``` is called to update sensor data. For pre determied
 
 # ESP32
 
-For usage with the ESP32 board un [ifremer_wave.ino](https://github.com/IRNAS/ifremer-wave-firmware/blob/master/ifremer_wave.ino). Same libraries are needed, except from HDC2080.h and HDC2080.cpp, LIS2DH12.h and LIS2DH12.cpp, ensors.ino and comms.ino files. There is no support for the LoraWan communication. 
+For usage with the ESP32 board run [ifremer_wave.ino](https://github.com/IRNAS/ifremer-wave-firmware/blob/master/ifremer_wave.ino) main. Same libraries are needed, except from HDC2080.h and HDC2080.cpp, LIS2DH12.h and LIS2DH12.cpp, sensors.ino and comms.ino files. There is no support for the LoraWan communication. 
 
 The folowing changes are needed:
 * To enable SD card logging, add SD.h and FS.h libraries and uncoment ```#define SD_CARD``` inside wave_analyser.h file. 
 * To enable debug printout, comment ```#define STM32_BOARD``` inside debug_print.h file. 
 
-It will wakeup the device every TIME_TO_SLEEP seconds (default 300 s) and take measurments. Rotated Z-axis acceleration and final data are stored to SD card. 
+It will wakeup the device every TIME_TO_SLEEP seconds (default 300 s) and take measurments. Rotated Z-axis acceleration and final data are stored to the SD card. 
