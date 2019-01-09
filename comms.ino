@@ -9,8 +9,8 @@
 // At most 10 downlink messages per day, including the ACKs for confirmed uplinks.
 
 // Configure the keys here, node the DevEUI is acquired from the module, but you can manually override
-const char *appEui  = "70B3D57ED001614D";
-const char *appKey  = "E5D5733FD17F63FD163061F3197DA0D4";
+const char *appEui  = "enter here";
+const char *appKey  = "enter here";
 
 //const char *devEui  = "enter here"; //uncomment if manual
 char devEui[32]; // comment if manual
@@ -44,54 +44,6 @@ typedef union lorawanPacket_t{
 };
 
 lorawanPacket_t packet;
-
-//Implement automatic adjustment to send data at TTN fair policy rate
-//Slightly cheats after reboot for first 100 uplinks, such that ADR can kick in, testing only
-//TODO: prototype implementation, not correctly implemented
-
-long ttn_fair_policy(){
-  //int payload_length = 13 + sizeof(sensorData_t); //header is 13 bytes
-   //see calculation https://docs.google.com/spreadsheets/d/1QvcKsGeTTPpr9icj4XkKXq4r2zTc2j0gsHLrnplzM3I/edit#gid=0
-  //TODO: insert proper calculation, now assuming 12 byte payload
-  //TODO: for proper calculation daily airtime should be monitored, now assuming DR does not change often/daily
-  int daily_uplinks = 486; // default value for SF7
-  switch (LoRaWAN.getDataRate()) {
-    case 0: //SF12
-      daily_uplinks = 20;
-      break;
-    case 1://SF11
-      daily_uplinks = 36;
-      break;
-    case 2://SF10
-      daily_uplinks = 72;
-      break;
-    case 3://SF9
-      daily_uplinks = 145;
-      break;
-    case 4://SF8
-      daily_uplinks = 265;
-      break;
-    case 5://SF7
-      daily_uplinks = 486;
-      break;
-    default:
-      daily_uplinks = 2880;//every 30s
-  }
-
-  long transmit_delay = 24*3600/daily_uplinks;
-    
-  #ifdef debug
-    serial_debug.print("TTN fair policy daily uplinks: ");
-    serial_debug.print(daily_uplinks);
-    serial_debug.println("");
-    serial_debug.println(" uplinks");
-    serial_debug.print("send delay ");
-    serial_debug.print(transmit_delay);
-    serial_debug.println(" s");
-  #endif
-  
-  return transmit_delay;
-}
 
 void comms_setup( void )
 {
@@ -143,17 +95,6 @@ void comms_transmit(void)
     #ifdef debug
         serial_debug.println("comms_transmit() scheduling send");
     #endif
-    //if datarate has changed since last check and got more then 10 uplinks, this forces faster convergence towards better datarate
-    /*if(((datarate_old!=LoRaWAN.getDataRate())&LoRaWAN.getUpLinkCounter()>10)| LoRaWAN.getUpLinkCounter()==10){
-      #ifdef debug
-      serial_debug.println("comms_transmit() datarate changed");
-      #endif
-      datarate_old=LoRaWAN.getDataRate();
-      //configure timer
-      long send_period = ttn_fair_policy();
-      transmitTimer.stop();
-      transmitTimer.start(transmitCallback, 0, send_period*1000); // schedule a transmission
-    }*/
     
     if (!LoRaWAN.linkGateways())
     {
