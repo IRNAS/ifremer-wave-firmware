@@ -1,15 +1,15 @@
 #include "wave_analyser.h"
 
 #pragma region WaveAnalyser::WaveAnalyser()
-/* WaveAnalyser cosntructor
-Input: All defoult value parameters
+/* WaveAnalyser constructor
+Input: All default value parameters
 * float cutoff_freq - cutoff frequency for the low-pass filter
 * float sampling_time - predicted sampling time of the IMU
 * int order - order of the low-pass filter, between 1 and 4
 * int n_data_array - Length of data array, defines max number of stored values
 * int n_grad - distance for the gradient calculation
-* int innitial_calibration_delay - milliseconds of innitial calculation delay
-* int n_w - number of waves to be recorded in single itteration
+* int innitial_calibration_delay - milliseconds of initial calculation delay
+* int n_w - number of waves to be recorded in single iteration
 */
 WaveAnalyser::WaveAnalyser(float cutoff_freq, float sampling_time, int order, int n_data_array, int n_grad, int innitial_calibration_delay, int n_w) {
 
@@ -25,11 +25,11 @@ WaveAnalyser::WaveAnalyser(float cutoff_freq, float sampling_time, int order, in
 #pragma endregion
 
 #pragma region void WaveAnalyser::init()
-/* Innitialisation
+/* Initialization
 Input: /
 Output: /
 Description:
-* Innitialise variables 
+* Initialize variables 
 */
 void WaveAnalyser::init() {
 	
@@ -43,7 +43,7 @@ void WaveAnalyser::init() {
 	wave_significant = 0.0;
 	period_avg = 0.0;
 
-	//Initialise array classes
+	//Initialize array classes
 	A->Init();
 
 	wait_time = millis(); //Reset wait time
@@ -55,12 +55,12 @@ void WaveAnalyser::init() {
 /* Setup the system
 Input: /
 Output: /
-Description: initialise class and setup MPU sensor
+Description: initialize class and setup MPU sensor
 */
 void WaveAnalyser::setup() {
 
 	mpu.setup(); //Setup MPU sensor
-	init(); //Initialise analyser
+	init(); //Initialize analyser
 	
 	//Initialise arrays
 	for (int i = 0; i < 2 * N_WAVES_MAX; i++) {
@@ -79,7 +79,7 @@ void WaveAnalyser::setup() {
 		LOG(1, "Log file does not exist, create new one.");
 		logfile = SD.open(filename, FILE_WRITE);
 		if (!logfile) {
-			LOG(0, "Couldnt create data log file.");
+			LOG(0, "Couldn't create data log file.");
 		}
 		logfile.println("Log file created.");
 	}
@@ -92,13 +92,13 @@ void WaveAnalyser::setup() {
 #pragma region bool WaveAnalyser::update()
 /* Update - get called every loop
 Input: /
-Output: bool - return true when analysis is compleated
+Output: bool - return true when analysis is completed
 Description:
-* Update MPU measurment - if new value, true is returned -> proceed
-* Check if the innitial wait time has passed. During the wait time display seconds left.
+* Update MPU measurement - if new value, true is returned -> proceed
+* Check if the initial wait time has passed. During the wait time display seconds left.
 * Add new rotated z-acceleration value and time interval to the calculation array
 * If calculation array is full, send MPU9250 sensor to sleep and proceed with data analysis
-* Check if we have desired number of crests and troughs, if yes analyse size and period. Initialise the class. 
+* Check if we have desired number of crests and troughs, if yes analyse size and period. Initialize the class. 
 */
 bool WaveAnalyser::update() {
 
@@ -145,10 +145,10 @@ bool WaveAnalyser::update() {
 Input: / 
 Output: bool - return true if sufficient waves are detected
 Description:
-* Apply low pass filetr to the data
-* Analyse gradient and determin min/max points
-* Calculate wave heigths
-* Analyse heigth data
+* Apply low pass filter to the data
+* Analyse gradient and determine min/max points
+* Calculate wave heights
+* Analyse height data
 */
 bool WaveAnalyser::analyseData() {
 
@@ -176,15 +176,15 @@ bool WaveAnalyser::analyseData() {
 #pragma endregion
 
 #pragma region void WaveAnalyser::analyseGradient()
-/* Analyse gradients and determin min/max points
+/* Analyse gradients and determine min/max points
 Input: /
 Output: /
 Description: 
 * Loop over all data points
 * Compute new gradient
-* If gradient has changed, update current gradient and reset gardient counter. Store position of the first point with new direction.
+* If gradient has changed, update current gradient and reset gradient counter. Store position of the first point with new direction.
 * If gradient stayed the same increase gradient counter.
-* Check if we have new direction for sufficient number of consecitive points, if yes add new bottom or top.
+* Check if we have new direction for sufficient number of consecutive points, if yes add new bottom or top.
 */
 void WaveAnalyser::analyseGradient() {
 	
@@ -232,7 +232,7 @@ void WaveAnalyser::analyseGradient() {
 #pragma endregion
 
 #pragma region int16_t WaveAnalyser::calculateOffset(int idx1, int idx2)
-/* Calculate offset - i.e. average between two heigths
+/* Calculate offset - i.e. average between two heights
 Input: int idx1, int idx2 - indices of two points
 Output: int16_t - calculated average, offset
 */
@@ -295,9 +295,9 @@ Output: bool - return true if sufficient number of waves were analysed, or numbe
 Description: 
 * If sufficient number of waves were detected proceed with analysis.
 * Sort heights by size. 
-* Calculate average wave heigth and period. 
-* Determine 2/3 of measurments
-* Calculate average heigth of waves in correct range - significant height
+* Calculate average wave height and period. 
+* Determine 2/3 of measurements
+* Calculate average height of waves in correct range - significant height
 */
 bool WaveAnalyser::analyseWaves() {
 
@@ -347,7 +347,7 @@ bool WaveAnalyser::analyseWaves() {
 #endif
 		return true;
 	}
-	//Else repeate scanning
+	//Else repeat scanning
 	else {
 		if (wave_max_counter <= 2) {
 			//End declare no specific waves
@@ -360,8 +360,8 @@ bool WaveAnalyser::analyseWaves() {
 			return true;
 		}
 		else {
-			//Repeate scanning
-			init(); //Initialise
+			//Repeat scanning
+			init(); //Initialize
 			LOG(1, "Array not full.");
 #ifdef SD_CARD
 			logfile = SD.open(filename, FILE_APPEND);
@@ -411,7 +411,7 @@ void WaveAnalyser::sort() {
 // SET FUNCTIONS
 
 #pragma region void WaveAnalyser::setCalibrationDelay(int newDelay)
-/* Re-set initial calibration delay in milis
+/* Re-set initial calibration delay in millis
 * Input: int newDelay - in millis
 * Output: /
 */

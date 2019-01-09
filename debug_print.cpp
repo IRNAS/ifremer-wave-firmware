@@ -9,7 +9,7 @@ void LOG(int level, const char* text, ...)
 	vsprintf(msg, text, args);
 	va_end(args);
 
-	//Write level specifier at the strat of the new line
+	//Write level specifier at the start of the new line
 	switch (level) {
 	case 0:
 	{

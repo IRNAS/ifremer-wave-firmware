@@ -1,6 +1,6 @@
 /* ARRAY STRUCTURES classes - includes description of three array classes:
 * MOTION ARRAY - used to store acceleration data and analyse it, used in the wave_analyser.h library
-* QUATERNION - used for quarternion manipulation in the MPU9250.h library
+* QUATERNION - used for quaternion manipulation in the MPU9250.h library
 * VECTOR FLOAT - used in quaternion class
 */
 
@@ -35,8 +35,8 @@ public:
 	Output: /
 	Description:
 	* Check that gradient calculation points are not to big, relative to array size
-	* Construct measurment (int16_t) and delta time (uint32_t) array of length n
-	* Initialise arrays to 0
+	* Construct measurement (int16_t) and delta time (uint32_t) array of length n
+	* Initialize arrays to 0
 	*/
 	MotionArray(int n, int n_grad, float cutoff_freq, float sampling_time, int order) {
 		N = n;
@@ -51,7 +51,7 @@ public:
 			x[i] = 0;
 		}
 
-		//Initialise filter
+		//Initialize filter
 		IIR::ORDER  ord; //Low pass filter order
 		if (order == 1) { ord = IIR::ORDER::OD1; }
 		else if (order == 2) { ord = IIR::ORDER::OD2; }
@@ -64,10 +64,10 @@ public:
 #pragma endregion
 
 #pragma region void Init()
-	/* Initialisation
+	/* Initialization
 	Input: /
 	Output: /
-	Description: initialise arrays and counters
+	Description: initialize arrays and counters
 	*/
 	void Init() {
 		for (int i = 1; i < N; i++)
@@ -91,7 +91,7 @@ public:
 	* Update adding position, number of elements and calculation position
 	* Call function for gradient calculation and return gradient
 	*/
-	//Add new element - return gradient of calculation elemnt
+	//Add new element - return gradient of calculation element
 	bool AddElement(int16_t _x, float _dt) {
 		
 		x[pos] = _x; //Add element at the next position
@@ -138,14 +138,14 @@ public:
 	Description: 
 	* Integrate twice from pos_first to given end to get total displacement
 	* Update end position
-	* Return absulute displacement in m
+	* Return absolute displacement in m
 	*/
 	float CalculateDisplacement(int start, int end, int16_t offset1, int16_t offset2) {
 
 		float v = 0.0; //Zero velocity at top and bottom
 		float d = 0.0; //Zero displacement at top and bottom
 
-		//Loop til end idex
+		//Loop till end index
 		for (int i = start; i <= end; i++) {
 
 			float relative_pos = (float)(i - start) / (float)(end - start);
@@ -177,8 +177,8 @@ public:
 	Input: int i - calculation position
 	Output: int gradient - return negative, positive or 0 direction of the calculation position
 	Description: 
-	* Determine first and second point for calculationg gradient, optimally N_gradient positions from calculation point
-	* Calculate non-normalised gradient
+	* Determine first and second point for calculation gradient, optimally N_gradient positions from calculation point
+	* Calculate non-normalized gradient
 	* Return only direction (-1, 0, 1)
 	*/
 	int GetGradient(int i) {

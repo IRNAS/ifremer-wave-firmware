@@ -1,9 +1,9 @@
 /* DEBUG LIBRARY 
-Change value of DEBUG to adjust level of print-out, defoult in 1:
+Change value of DEBUG to adjust level of print-out, default in 1:
 -1 - no printout
 0 - only critical error
 1 - important calculation values
-2 - Additional measurments and values
+2 - Additional measurements and values
 3 - General debug print
 */
 #ifndef _DEBUG_PRINT_H_
