@@ -7,6 +7,22 @@ Firmware can be used on the STM32L0 board - with the LoraWan communication suppo
 <img src="https://github.com/IRNAS/ifremer-wave-firmware/blob/master/ESP32_setup.jpg" title="ESP32 and MPU9250 sensor setup." width="600" />
 ESP32 and MPU9250 sensor setup.
 
+# Wave results
+The system delivers the results in two versions, depending on the configuration used. ESP32 version logs all the measurements to the SD card which includes raw data and measurement results. The STM32 version with LoraWAN delivers only the results via a LoraWan packet for example:
+
+```
+  "Acceleration": 0,
+  "AirPressure": 980.3,
+  "Average_period": 64306,
+  "Average_wave_height": 10107,
+  "Battery": 3.29,
+  "CPU_temperature": 19.35,
+  "Humidity": 30.42,
+  "Info": 1,
+  "Significant_wave_height": 2641,
+  "Temperature": 22.56
+```
+
 # Power consumption
 The system operates a wave detection period and a sleep period. A typical wave detection with default settings is 180s long at an average power consumption of 12mA@3.75V, while the sleep period power consumption 100uA@3.75V. There are possible further power optimizations. Provided a 17min sleep duration is used, we have 3 detections per hour at an average consumption of 1.8mAh, thus  typical 18650 LiPo battery should deliver about 2 months of operation.
 

@@ -61,7 +61,11 @@ void comms_setup( void )
     
     LoRaWAN.setDutyCycle(true); // must be true except for development in confined environments
     LoRaWAN.setAntennaGain(0.0); // must be equal to the installed antenna
-    LoRaWAN.setADR(true); // Kicks in after 64 received packets
+    //LoRaWAN.setADR(true); // Kicks in after 64 received packets
+    // Manual settings if ADR disabled
+    LoRaWAN.setADR(false);
+    LoRaWAN.setDataRate(5);
+    LoRaWAN.setTxPower(14);
     //below three could be set automatically, but can not be set after join apparently
     LoRaWAN.setLinkCheckLimit(48); // number of uplinks link check is sent, 5 for experimenting, 48 otherwise
     LoRaWAN.setLinkCheckDelay(4); // number of uplinks waiting for an answer, 2 for experimenting, 4 otherwise
@@ -82,7 +86,6 @@ void comms_setup( void )
 void transmitCallback(void)
 {
   STM32L0.wakeup();
-  comms_transmit_flag = true;
   #ifdef debug
     serial_debug.println("transmitCallback() timer");
   #endif
@@ -125,8 +128,6 @@ void comms_transmit(void)
         serial_debug.print(LoRaWAN.getDownLinkCounter());
         serial_debug.println(" )");
       #endif
-      //read sensors and then send data
-      read_sensors();
       // int sendPacket(uint8_t port, const uint8_t *buffer, size_t size, bool confirmed = false);
       LoRaWAN.sendPacket(2, &packet.bytes[0], sizeof(sensorData_t), false);
     }
@@ -147,7 +148,7 @@ void comms_transmit(void)
   
   #ifdef debug
         serial_debug.print("comms_transmit() lorawan_failed_counter ");
-        serial_debug.print(lorawan_failed_counter);
+        serial_debug.println(lorawan_failed_counter);
   #endif
 
   //finally issue a full system reset if 50 scheduled transmissions failed
