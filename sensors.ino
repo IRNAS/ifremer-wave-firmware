@@ -5,7 +5,6 @@
 #include <Dps310.h>// Install through Manager
 #include "HDC2080.h"
 #include "LIS2DH12.h"
-#include "wave_analyser.h"
 
 // I2C
 //Adafruit_LIS3DH lis = Adafruit_LIS3DH();
@@ -19,21 +18,6 @@ Dps310 Dps310PressureSensor = Dps310();
 // HDC2080 object
 HDC2080 hdc2080 = HDC2080();
 
-/* Define Wave analyser
- *  You can specify additional parameters in the inicialisation to change defoult values. Defoult values are defined in the wave_analyser.h file.
- *  float cutoff_freq - cutoff fequency for the low pass filter
- *  float sampling_time - sensor sampling time
- *  int order - low pass filter order
- *  int n_data_array - length of data array
- *  int n_grad - number of points for gradient calculation
- *  int innitial_calibration_delay - initial delay for sensor calibration in millis
- *  int n_w - number of waves to detect
-
-WaveAnalyser(float cutoff_freq = CUTOFF_FREQ, float sampling_time = SAMPLING_TIME, int order = INIT_ORDER, int n_data_array = N_DATA_ARRAY,
-    int n_grad = N_GRAD, int innitial_calibration_delay = INNITAL_CALIBRATION_DELAY, int n_w = N_WAVES);
-*/
-WaveAnalyser waveAnalyser; //Defoult constructor
-
 void ISR_LIS() {
 
     STM32L0.wakeup();
@@ -42,16 +26,6 @@ void ISR_LIS() {
         serial_debug.println("LIS (ISR_LIS) - interrupt on accel");
     #endif
 
-}
-
-void wave_setup( void ){
-  waveAnalyser.setup();
-  //waveAnalyser.setCalibrationDelay(1000); //Set new innitial calibration delay time in millis
-  //waveAnalyser.setNumberOfWaves(5); //Set new number of waves to measure in each itteration, max wave number is 100
-}
-
-bool update_wave( void ){
-  return waveAnalyser.update();
 }
 
 void sensors_setup( void )

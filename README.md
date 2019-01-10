@@ -7,7 +7,10 @@ Firmware can be used on the STM32L0 board - with the LoraWan communication suppo
 <img src="https://github.com/IRNAS/ifremer-wave-firmware/blob/master/ESP32_setup.jpg" title="ESP32 and MPU9250 sensor setup." width="600" />
 ESP32 and MPU9250 sensor setup.
 
-# STM32L0
+# Power consumption
+The system operates a wave detection period and a sleep period. A typical wave detection with default settings is 180s long at an average power consumption of 12mA@3.75V, while the sleep period power consumption 100uA@3.75V. There are possible further power optimizations. Provided a 17min sleep duration is used, we have 3 detections per hour at an average consumption of 1.8mAh, thus  typical 18650 LiPo battery should deliver about 2 months of operation.
+
+# STM32L0 - Murata ABZ LoraWAN module
 For usage with STM32 and LoraWan communication you will need to run [ifremer_wave_lorawan.ino](https://github.com/IRNAS/ifremer-wave-firmware/blob/master/ifremer_wave_lorawan.ino) as the main file, while [sensors.ino](https://github.com/IRNAS/ifremer-wave-firmware/blob/master/sensors.ino) and [comms.ino](https://github.com/IRNAS/ifremer-wave-firmware/blob/master/comms.ino) files are needed as well. Add libraries:
 
 [wave-analyser.h](https://github.com/IRNAS/ifremer-wave-firmware/blob/master/wave_analyser.h) and [wave-analyser.cpp](https://github.com/IRNAS/ifremer-wave-firmware/blob/master/wave_analyser.cpp) - main wave analyser library.
