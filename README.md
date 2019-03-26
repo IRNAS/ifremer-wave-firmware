@@ -86,3 +86,15 @@ The folowing changes are needed:
 * To enable debug printout, comment ```#define STM32_BOARD``` inside debug_print.h file. 
 
 It will wakeup the device every TIME_TO_SLEEP seconds (default 300 s) and take measurments. Rotated Z-axis acceleration and final data are stored to the SD card. 
+
+# Calibration procecss
+To calibrate the gyroscope, a few steps must be completed.
+
+1. Connect the battery
+1. The LED will start blinking
+1. Tap the device against the desk until the LED turns on solidly
+1. When the LED turns off, start moving the unit in figure 8 shape for 30s untill the LED turns back on
+1. Put the device on the flat surface for another 30s.
+1. LED will blink and then the calibration is completed
+
+Upon correct calibration the device will return close to 0 wave height when rested at a flat surface.
