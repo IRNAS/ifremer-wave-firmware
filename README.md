@@ -1,5 +1,5 @@
 # ifremer-wave-firmware
-Firmware for wave tracking and loraWan communication using STM32L0 board. 
+Firmware for wave tracking and loraWan communication using STM32L0 board.  
 
 Firmware for wave tracking - measures wave height and period of ordinary gravity waves with the average period between 2 and 15 seconds. Significant wave height and average period are communicated using LoraWan. 
 Firmware can be used on the STM32L0 board - with the LoraWan communication support and also on the ESP32 board with the SD card logging support. 
